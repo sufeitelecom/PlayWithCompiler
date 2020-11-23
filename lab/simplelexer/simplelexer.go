@@ -1,4 +1,4 @@
-package main
+package simplelexer
 
 import (
 	"fmt"
@@ -122,10 +122,14 @@ const (
 	Status_IntLiteral
 )
 
-type simplelexer struct {
+type Simplelexer struct {
 	tokenList []SimpleToken // 保存解析出来的Token
 	buff      []rune        // 临时保存输入token的字符串
 	token     SimpleToken   // 正在解析的token
+}
+
+func NewSimpleLexer() *Simplelexer {
+	return &Simplelexer{}
 }
 
 /**
@@ -135,7 +139,7 @@ type simplelexer struct {
  * 返回DFA(有限自动机下一个状态)
  */
 
-func (s *simplelexer) InitToken(ch rune) DFSstatus {
+func (s *Simplelexer) InitToken(ch rune) DFSstatus {
 	if len(s.buff) > 0 { // 进行了状态切换，如果此时buff中存在数据，则输出到tokenlist中保存，并新建token和buff
 		s.token.Val = string(s.buff)
 		s.tokenList = append(s.tokenList, s.token)
@@ -197,7 +201,7 @@ func (s *simplelexer) InitToken(ch rune) DFSstatus {
 	}
 	return newstatus
 }
-func (s *simplelexer) Tokenize(str string) {
+func (s *Simplelexer) Tokenize(str string) {
 	buff_split := []rune(str)
 	var ch rune
 	status := Status_Initial
@@ -278,7 +282,7 @@ func (s *simplelexer) Tokenize(str string) {
 		s.InitToken(ch)
 	}
 }
-func (s *simplelexer) Dump() {
+func (s *Simplelexer) Dump() {
 	if len(s.tokenList) > 0 {
 		for _, v := range s.tokenList {
 			fmt.Printf("%s\t\t\t%s\n", v.Token, v.Val)
@@ -301,26 +305,6 @@ func IsBlank(ch rune) bool {
 }
 
 func main() {
-	lexer := &simplelexer{}
-	str := "int age = 45"
-	fmt.Printf("\n============lexer string :%s============\n", str)
-	lexer.Tokenize(str)
-	lexer.Dump()
-
-	str = "inta name = 45"
-	fmt.Printf("\n============lexer string :%s============\n", str)
-	lexer.Tokenize(str)
-	lexer.Dump()
-
-	str = "age >= 45"
-	fmt.Printf("\n============lexer string :%s============\n", str)
-	lexer.Tokenize(str)
-	lexer.Dump()
-
-	str = "age > 45"
-	fmt.Printf("\n============lexer string :%s============\n", str)
-	lexer.Tokenize(str)
-	lexer.Dump()
 
 	return
 }
