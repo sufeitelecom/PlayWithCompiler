@@ -131,6 +131,9 @@ type Simplelexer struct {
 func NewSimpleLexer() *Simplelexer {
 	return &Simplelexer{}
 }
+func (s *Simplelexer) GetTokenList() []SimpleToken {
+	return s.tokenList
+}
 
 /**
  * 该函数是生成token，加入list，然后更加现在字符进行状态转换函数
